@@ -21,7 +21,7 @@ export default {
             this.$router.push('/alcohol')
         },
         goToSoft() {
-            this.$router.push('/softs')
+            this.$router.push('/soft')
         }
     }
 }

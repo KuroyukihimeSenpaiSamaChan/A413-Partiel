@@ -1494,7 +1494,7 @@ module.exports = function spread(callback) {
 
 
 var bind = __webpack_require__(/*! ./helpers/bind */ "./node_modules/axios/lib/helpers/bind.js");
-var isBuffer = __webpack_require__(/*! is-buffer */ "./node_modules/axios/node_modules/is-buffer/index.js");
+var isBuffer = __webpack_require__(/*! is-buffer */ "./node_modules/is-buffer/index.js");
 
 /*global toString:true*/
 
@@ -1829,28 +1829,6 @@ module.exports = {
 
 /***/ }),
 
-/***/ "./node_modules/axios/node_modules/is-buffer/index.js":
-/*!************************************************************!*\
-  !*** ./node_modules/axios/node_modules/is-buffer/index.js ***!
-  \************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/*!
- * Determine if an object is a Buffer
- *
- * @author   Feross Aboukhadijeh <https://feross.org>
- * @license  MIT
- */
-
-module.exports = function isBuffer (obj) {
-  return obj != null && obj.constructor != null &&
-    typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
-}
-
-
-/***/ }),
-
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Screen1.vue?vue&type=script&lang=js&":
 /*!******************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Screen1.vue?vue&type=script&lang=js& ***!
@@ -1882,7 +1860,7 @@ __webpack_require__.r(__webpack_exports__);
       this.$router.push('/alcohol');
     },
     goToSoft: function goToSoft() {
-      this.$router.push('/softs');
+      this.$router.push('/soft');
     }
   }
 });
@@ -1947,6 +1925,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -1964,43 +1947,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-  data: function data() {
-    return {
-      softs: [{
-        "id": 1,
-        "name": "Coca-Cola"
-      }, {
-        "id": 2,
-        "name": "Eau Plate"
-      }, {
-        "id": 3,
-        "name": "Jus d'Orange"
-      }, {
-        "id": 4,
-        "name": "Jus de Pomme"
-      }, {
-        "id": 5,
-        "name": "Jus d'Ananas"
-      }, {
-        "id": 6,
-        "name": "Eau Gazeuze"
-      }, {
-        "id": 7,
-        "name": "Red Bull"
-      }, {
-        "id": 8,
-        "name": "Orangina"
-      }]
-    };
+  mounted: function mounted() {
+    this.$store.dispatch('loadSofts');
   },
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])({
+    'softs': 'softs'
+  })),
   methods: {
-    goToThankYou: function goToThankYou() {
-      this.$store.dispatch('sendToRobot').then(function (res) {
-        console.log('go to thank-you');
-      }, function (err) {
-        console.debug(err);
-      });
+    setSoft: function setSoft(soft) {
+      this.$store.commit('setSoft', soft);
+      this.$store.dispatch('sendToRobot');
+      this.$router.push('/thank-you');
     }
   }
 });
@@ -6645,6 +6604,28 @@ function toComment(sourceMap) {
 	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
 
 	return '/*# ' + data + ' */';
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/is-buffer/index.js":
+/*!*****************************************!*\
+  !*** ./node_modules/is-buffer/index.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/*!
+ * Determine if an object is a Buffer
+ *
+ * @author   Feross Aboukhadijeh <https://feross.org>
+ * @license  MIT
+ */
+
+module.exports = function isBuffer (obj) {
+  return obj != null && obj.constructor != null &&
+    typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
 }
 
 
@@ -38268,7 +38249,7 @@ var render = function() {
                 on: {
                   click: function($event) {
                     $event.preventDefault()
-                    return _vm.goToThankYou($event)
+                    return _vm.setSoft(soft.id)
                   }
                 }
               },
@@ -54762,7 +54743,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   state: {
     alcohol: undefined,
-    alcohols: []
+    alcohols: [],
+    soft: undefined,
+    softs: []
   },
   mutations: {
     setAlcohol: function setAlcohol(state, alcohol) {
@@ -54770,6 +54753,12 @@ __webpack_require__.r(__webpack_exports__);
     },
     setAlcohols: function setAlcohols(state, alcohols) {
       state.alcohols = alcohols;
+    },
+    setSoft: function setSoft(state, soft) {
+      state.soft = soft;
+    },
+    setSofts: function setSofts(state, softs) {
+      state.softs = softs;
     }
   },
   actions: {
@@ -54778,11 +54767,16 @@ __webpack_require__.r(__webpack_exports__);
         context.commit('setAlcohols', res.data);
       });
     },
+    loadSofts: function loadSofts(context) {
+      axios.get('/softs').then(function (res) {
+        context.commit('setSofts', res.data);
+      });
+    },
     sendToRobot: function sendToRobot(_ref) {
       var state = _ref.state;
       return axios.post('/order/post', {
         alcohol: state.alcohol,
-        soft: undefined
+        soft: state.soft
       });
     }
   },
@@ -54792,6 +54786,12 @@ __webpack_require__.r(__webpack_exports__);
     },
     alcohols: function alcohols(state) {
       return state.alcohols;
+    },
+    soft: function soft(state) {
+      return state.soft;
+    },
+    softs: function softs(state) {
+      return state.softs;
     }
   }
 });
@@ -54816,8 +54816,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\vscode-project\partiel\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\vscode-project\partiel\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\mp712271\Documents\Coursphp\partiel\A413-Partiel\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\mp712271\Documents\Coursphp\partiel\A413-Partiel\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
